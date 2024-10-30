@@ -1,0 +1,9 @@
+### 上传文件
+POST localhost:8120/admin/contract/media-files/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="filedata"; filename="1.sol"
+Content-Type: application/octet-stream
+
+< d:/develop/upload/1.sol
