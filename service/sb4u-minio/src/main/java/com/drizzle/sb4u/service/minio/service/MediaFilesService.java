@@ -1,5 +1,6 @@
 package com.drizzle.sb4u.service.minio.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.drizzle.sb4u.common.base.result.PageParams;
 import com.drizzle.sb4u.common.base.result.PageResult;
@@ -32,7 +33,7 @@ public interface MediaFilesService extends IService<MediaFiles> {
     @Transactional
     public MediaFiles addMediaFilesToDb(String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 
-    public PageResult<MediaFiles> queryMediaFiels(PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
+    IPage<MediaFiles> selectPage(PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
     public Boolean deleteContractFileById(String fileId);
 

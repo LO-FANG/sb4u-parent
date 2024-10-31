@@ -22,6 +22,6 @@ import java.io.IOException;
 @FeignClient(name = "service-minio", configuration = MultipartSupportConfig.class, fallbackFactory = MinioServiceClientFallbackFactory.class)
 public interface MinioServiceClient {
 
-    @PostMapping("admin/contract/media-files/delete")
+    @PostMapping("minio/delete")
     Boolean delete(@RequestParam(value = "fileId") String id);
 }

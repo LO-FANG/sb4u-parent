@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "service-contract", fallbackFactory = ContractServiceClientFallbackFactory.class)
 public interface ContractServiceClient {
 
-    @GetMapping("admin/sb4u/contract/getfileid/{id}")
+    @PostMapping("/contract/getfileid/{id}")
     public String getFileIdById(@PathVariable("id") String id);
 
-    @PostMapping("admin/contract/detect-result/querydetectfileid/{id}")
+    @PostMapping("/contract/detect-result/querydetectfileid/{id}")
     public String queryDetectFileId(@PathVariable("id") String id);
 }

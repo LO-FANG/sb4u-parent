@@ -36,7 +36,7 @@ public class DetectResultServiceImpl extends ServiceImpl<DetectResultMapper, Det
 
         LambdaQueryWrapper<DetectResult> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         // 合约文件ID
-        lambdaQueryWrapper.eq(StringUtils.isNotEmpty(detectResultQueryVo.getResultId()), DetectResult::getId, detectResultQueryVo.getResultId());
+        lambdaQueryWrapper.eq(StringUtils.isNotEmpty(detectResultQueryVo.getResultId()), DetectResult::getContractId, detectResultQueryVo.getResultId());
         // 检测工具
         lambdaQueryWrapper.like(StringUtils.isNotEmpty(detectResultQueryVo.getTool()), DetectResult::getTool, detectResultQueryVo.getTool());
         // 漏洞类型
@@ -47,5 +47,12 @@ public class DetectResultServiceImpl extends ServiceImpl<DetectResultMapper, Det
         IPage<DetectResult> detectResultPage = detectResultMapper.selectPage(page, lambdaQueryWrapper);
         long total = detectResultPage.getTotal();
         return detectResultPage;
+    }
+
+    @Override
+    public String getResFileIdByResId(String id) {
+        DetectResult detectResult = detectResultMapper.selectById(id);
+        String ResFileId = detectResult.getResultId();
+        return ResFileId;
     }
 }

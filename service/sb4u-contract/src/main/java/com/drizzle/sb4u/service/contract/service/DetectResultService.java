@@ -20,4 +20,6 @@ public interface DetectResultService extends IService<DetectResult> {
 
     IPage<DetectResult> selectPage(PageParams pageParams, QuerDetectResultDto querDetectResultDto);
 
+    String getResFileIdByResId(String id);
+
 }

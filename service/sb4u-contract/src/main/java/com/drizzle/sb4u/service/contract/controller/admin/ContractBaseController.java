@@ -8,10 +8,12 @@ import com.drizzle.sb4u.service.contract.entity.dto.AddContractBaseDto;
 import com.drizzle.sb4u.service.contract.entity.dto.QueryContractBaseDto;
 import com.drizzle.sb4u.service.contract.entity.dto.UpdateContractBaseDto;
 import com.drizzle.sb4u.service.contract.entity.po.ContractBase;
+import com.drizzle.sb4u.service.contract.entity.po.DetectResult;
 import com.drizzle.sb4u.service.contract.feignclient.MinioServiceClient;
 import com.drizzle.sb4u.service.contract.service.ContractBaseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +28,8 @@ import java.util.List;
  * @author drizzle
  * @since 2024-10-08
  */
-@CrossOrigin
 @RestController
-@RequestMapping("admin/sb4u/contract")
+@Slf4j
 public class ContractBaseController {
 
     @Autowired
@@ -125,7 +126,17 @@ public class ContractBaseController {
         }
     }
 
-
+    @ApiOperation("查询合约文件id")
+    @PostMapping("/getfileid/{id}")
+    public String getFileIdById(@PathVariable("id") String id) {
+        ContractBase contractBase = contractBaseService.getById(id);
+        if(contractBase != null) {
+            return contractBase.getFileId();
+        } else {
+            log.error("没有查询到合约文件结果");
+            return "";
+        }
+    }
 
 
 

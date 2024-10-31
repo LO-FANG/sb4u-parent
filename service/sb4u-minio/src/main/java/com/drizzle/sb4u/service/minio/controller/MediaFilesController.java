@@ -1,6 +1,7 @@
 package com.drizzle.sb4u.service.minio.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.drizzle.sb4u.common.base.result.PageParams;
 import com.drizzle.sb4u.common.base.result.PageResult;
 import com.drizzle.sb4u.common.base.result.R;
@@ -11,6 +12,8 @@ import com.drizzle.sb4u.service.minio.entity.dto.UploadFileResultDto;
 import com.drizzle.sb4u.service.minio.entity.po.MediaFiles;
 import com.drizzle.sb4u.service.minio.service.MediaFilesService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -29,11 +33,8 @@ import java.io.IOException;
  * @since 2024-10-23
  */
 @RestController
-@RequestMapping("admin/contract/media-files")
-@CrossOrigin
+@Slf4j
 public class MediaFilesController {
-
-
 
     @Autowired
     MediaFilesService mediaFilesService;
@@ -55,11 +56,20 @@ public class MediaFilesController {
     }
 
 
-    @ApiOperation("媒资列表查询接口")
-    @PostMapping("/files")
-    public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
-        return mediaFilesService.queryMediaFiels(pageParams, queryMediaParamsDto);
+    @ApiOperation(value = "获取媒资分页列表", notes = "获取媒资分页列表")
+    @GetMapping("/listpage/{pageNo}/{pageSize}")
+    public R listPage(@PathVariable Long pageNo, @PathVariable Long pageSize,
+                      @ApiParam("MediaFiles查询条件对象") QueryMediaParamsDto queryMediaParamsDto) {
+        PageParams pageParams = new PageParams();
+        if(pageNo != null && pageSize != null) {
+            pageParams.setPageNo(pageNo);
+            pageParams.setPageSize(pageSize);
+        }
+        IPage<MediaFiles> pageResult = mediaFilesService.selectPage(pageParams, queryMediaParamsDto);
+        List<MediaFiles> contractBaseList =pageResult.getRecords();
 
+        Long total = pageResult.getTotal();
+        return R.ok().data("total", total).data("rows", contractBaseList);
     }
 
     @ApiOperation("上传合约文件")
@@ -92,7 +102,7 @@ public class MediaFilesController {
     }
 
 
-    @ApiOperation("删除合约文件")
+    @ApiOperation("删除文件")
     @PostMapping(value = "/delete")
     public Boolean delete(@RequestParam(value = "fileId") String id) {
         boolean deleteFromMinio = mediaFilesService.deleteContractFileById(id);
@@ -106,8 +116,8 @@ public class MediaFilesController {
 
     @ApiOperation("下载文件")
     @GetMapping("/download")
-    public R download(@RequestParam(value = "contractId") String contractId) {
-        String url = mediaFilesService.getDownloadUrl(contractId);
+    public R download(@RequestParam(value = "id") String id) {
+        String url = mediaFilesService.getDownloadUrl(id);
         if(url.equals("")) {
             return R.error().message("下载失败");
         }

@@ -1,6 +1,9 @@
 package com.drizzle.sb4u.service.minio.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.drizzle.sb4u.common.base.result.PageParams;
 import com.drizzle.sb4u.common.base.result.PageResult;
@@ -160,9 +163,19 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
     }
 
     @Override
-    public PageResult<MediaFiles> queryMediaFiels(PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
-        return null;
+    public IPage<MediaFiles> selectPage(PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
+        LambdaQueryWrapper<MediaFiles> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // 条件1： 文件名称
+        lambdaQueryWrapper.eq(StringUtils.isNotEmpty(queryMediaParamsDto.getFilename()), MediaFiles::getFilename, queryMediaParamsDto.getFilename());
+        // 条件2： 文件类型
+        lambdaQueryWrapper.eq(StringUtils.isNotEmpty(queryMediaParamsDto.getFileType()), MediaFiles::getFileType, queryMediaParamsDto.getFileType());
+        Page<MediaFiles> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
+        IPage<MediaFiles> contractBasePage = mediaFilesMapper.selectPage(page, lambdaQueryWrapper);
+        long total = contractBasePage.getTotal();
+        return contractBasePage;
+
     }
+
 
     @Override
     public Boolean deleteContractFileById(String fileId) {

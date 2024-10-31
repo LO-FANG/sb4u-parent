@@ -1,20 +1,23 @@
-package com.drizzle.sb4u.gateway;
+package com.drizzle.sb4u.service.minio;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Created with IntelliJ IDEA.
  *
  * @Author: drizzle
- * @Date: 2024/10/24/14:27
+ * @Date: 2024/10/24/20:23
  * @Description:
  */
 @SpringBootApplication
-public class ApiGatewayApplication {
+@ComponentScan({"com.drizzle.sb4u"})
+@EnableFeignClients
+public class sb4uMinioApplication {
     public static void main(String[] args) {
-
         System.setProperty("nacos.logging.default.config.enabled","false");
-        SpringApplication.run(ApiGatewayApplication.class, args);
+        SpringApplication.run(sb4uMinioApplication.class, args);
     }
 }

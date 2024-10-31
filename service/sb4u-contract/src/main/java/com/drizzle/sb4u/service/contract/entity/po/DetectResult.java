@@ -20,13 +20,12 @@ import java.util.Date;
 @Data
 @TableName("t_detect_result")
 @ApiModel(value="DetectResult对象", description="检测结果表")
-public class DetectResult {
+public class DetectResult extends BaseEntity{
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "ID")
-    @TableId(value = "id")
-    private String id;
+    @ApiModelProperty(value = "contractId")
+    private String contractId;
 
     @ApiModelProperty(value = "合约名称")
     private String contractName;
@@ -52,14 +51,6 @@ public class DetectResult {
     @ApiModelProperty(value = "检测结果文件id")
     private String resultId;
 
-
-    @ApiModelProperty(value = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
 
 }
